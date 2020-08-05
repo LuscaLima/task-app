@@ -1,12 +1,20 @@
-import express from "express";
-const app = express();
+import express from 'express'
+import './database'
+import UserRoutes from './routes/UserRoutes'
 
-import "./mongodb";
+/** Instantiate the express and define the port to listen */
+const app = express()
+const port = process.env.PORT || 3000
 
-const port = process.env.PORT || 3000;
+/** All basic settings for express */
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+
+/** Setup all routes associate with the user route */
+app.use('/user', UserRoutes)
 
 app.listen(port, () => {
-  console.log(`Aplicação escutando na porta ${port}`);
-});
+  console.log(`Aplicação escutando na porta ${port}`)
+})
 
 // import "./mongodb";

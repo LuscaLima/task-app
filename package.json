@@ -2,7 +2,7 @@
   "name": "task-app",
   "version": "1.0.0",
   "description": "A simple task app",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "ts-node-dev --inspect=8181 --respawn src/index.ts"
   },
@@ -11,12 +11,14 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.9.27"
+    "mongoose": "^5.9.27",
+    "validator": "^13.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.7",
     "@types/mongoose": "^5.7.34",
     "@types/node": "^14.0.27",
+    "@types/validator": "^13.1.0",
     "ts-node-dev": "^1.0.0-pre.56",
     "typescript": "^3.9.7"
   }
