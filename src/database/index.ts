@@ -11,25 +11,3 @@ mongoose
   .catch(err => {
     console.error('Database connection failed. Error: ' + err)
   })
-
-// const Task = mongoose.model(
-//   'Task',
-//   new mongoose.Schema({
-//     description: {
-//       type: String,
-//       required: true,
-//       trim: true
-//     },
-//     completed: {
-//       type: Boolean,
-//       required: false,
-//       default: false
-//     }
-//   })
-// )
-
-// const nt = new Task({
-//   description: 'Clean the house'
-// })
-
-// nt.save()
