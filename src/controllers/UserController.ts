@@ -5,43 +5,41 @@ import BaseController from './BaseController'
 class UserController implements BaseController {
   constructor() {}
 
-  public create(req: Request, res: Response) {
+  public async create(req: Request, res: Response) {
     const user = new User(req.body)
 
-    user
-      .save()
-      .then(() => {
-        res.status(201).json(user)
-      })
-      .catch(err => {
-        res.status(400).send(err)
-      })
+    try {
+      await user.save()
+      res.status(201).json(user)
+    } catch (e) {
+      res.status(400).send(e)
+    }
   }
 
-  public all(_: Request, res: Response) {
-    User.find({})
-      .then(users => {
-        res.json(users)
-      })
-      .catch(() => {
-        res.status(500).send()
-      })
+  public async all(_: Request, res: Response) {
+    try {
+      const users = await User.find({})
+      res.json(users)
+    } catch (e) {
+      res.status(500).send()
+    }
   }
 
-  public oneById(req: Request, res: Response) {
+  public async oneById(req: Request, res: Response) {
     const { id } = req.params
 
-    User.findById(id)
-      .then(user => {
-        if (!user) {
-          return res.status(404).send()
-        }
+    try {
+      const user = await User.findById(id)
 
-        return res.json(user)
-      })
-      .catch(err => {
-        res.status(404).send(err)
-      })
+      if (!user) {
+        res.status(404).send()
+        return
+      }
+
+      res.json(user)
+    } catch (e) {
+      res.status(404).send(e)
+    }
   }
 }
 
