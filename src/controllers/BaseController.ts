@@ -1,26 +1,30 @@
 import { Request, Response } from 'express'
 
-interface BaseController {
+abstract class BaseController {
   /**
    * create
    */
-  create(req: Request, res: Response): void
+  abstract create(req: Request, res: Response): Promise<void>
 
   /**
    * all
    */
-  all(req: Request, res: Response): void
+  abstract all(_: Request, res: Response): Promise<void>
 
   /**
    * getById
    */
-  oneById(req: Request, res: Response): void
+  abstract oneById(req: Request, res: Response): Promise<void>
 
   /** update by id */
-  update(req: Request, res: Response): void
+  abstract update(req: Request, res: Response): Promise<void>
 
   /** is valid update */
-  // isValidUpdate(data: object, keys: Array<string>): boolean
+  isValidUpdate(data: object, keys: Array<string>): boolean {
+    const updates = Object.keys(data)
+
+    return updates.every(update => keys.includes(update))
+  }
 }
 
 export default BaseController

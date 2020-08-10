@@ -1,11 +1,9 @@
 import { Request, Response } from 'express'
-import Task from '../models/Task'
 import BaseController from './BaseController'
+import Task from '../models/Task'
 
-class TaskController implements BaseController {
-  constructor() {}
-
-  public async create(req: Request, res: Response) {
+class TaskController extends BaseController {
+  public async create(req: Request, res: Response): Promise<void> {
     const task = new Task(req.body)
 
     try {
@@ -16,7 +14,7 @@ class TaskController implements BaseController {
     }
   }
 
-  public async all(_: Request, res: Response) {
+  public async all(_: Request, res: Response): Promise<void> {
     try {
       const tasks = await Task.find({})
       res.json(tasks)
@@ -25,7 +23,7 @@ class TaskController implements BaseController {
     }
   }
 
-  public async oneById(req: Request, res: Response) {
+  public async oneById(req: Request, res: Response): Promise<void> {
     const { id } = req.params
 
     try {
@@ -42,8 +40,14 @@ class TaskController implements BaseController {
     }
   }
 
-  public async update(req: Request, res: Response) {
+  public async update(req: Request, res: Response): Promise<void> {
     const { id } = req.params
+
+    if (!super.isValidUpdate(req.body, ['title', 'description', 'completed'])) {
+      res.status(400).json({
+        error: 'Invalid update'
+      })
+    }
 
     try {
       const task = await Task.findByIdAndUpdate(id, req.body, {
@@ -60,12 +64,6 @@ class TaskController implements BaseController {
     } catch (e) {
       res.status(400).send()
     }
-  }
-
-  isValidUpdate(data: object, keys: Array<string>): boolean {
-    const updates = Object.keys(data)
-
-    return updates.every(update => keys.includes(update))
   }
 }
 

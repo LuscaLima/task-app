@@ -1,11 +1,13 @@
 import { Request, Response } from 'express'
-import User from '../models/User'
 import BaseController from './BaseController'
+import User from '../models/User'
 
-class UserController implements BaseController {
-  constructor() {}
+class UserController extends BaseController {
+  // constructor() {
+  //   super()
+  // }
 
-  public async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     const user = new User(req.body)
 
     try {
@@ -16,7 +18,7 @@ class UserController implements BaseController {
     }
   }
 
-  public async all(_: Request, res: Response) {
+  async all(_: Request, res: Response) {
     try {
       const users = await User.find({})
       res.json(users)
@@ -25,7 +27,7 @@ class UserController implements BaseController {
     }
   }
 
-  public async oneById(req: Request, res: Response) {
+  async oneById(req: Request, res: Response) {
     const { id } = req.params
 
     try {
@@ -45,6 +47,12 @@ class UserController implements BaseController {
   public async update(req: Request, res: Response) {
     const { id } = req.params
 
+    if (!super.isValidUpdate(req.body, ['name', 'email', 'password'])) {
+      res.status(400).json({
+        error: 'Invalid update'
+      })
+    }
+
     try {
       const user = await User.findByIdAndUpdate(id, req.body, {
         new: true,
@@ -60,12 +68,6 @@ class UserController implements BaseController {
     } catch (e) {
       res.status(400).send()
     }
-  }
-
-  isValidUpdate(data: object, keys: Array<string>): boolean {
-    const updates = Object.keys(data)
-
-    return updates.every(update => keys.includes(update))
   }
 }
 
