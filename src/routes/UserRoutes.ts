@@ -11,7 +11,10 @@ router.get('/', User.all)
 /** Get one user by ID */
 router.get('/:id', User.oneById)
 
-/** Update onde task by ID */
+/** Update one task by ID */
 router.put('/:id', User.update)
+
+/** Delete one user by ID */
+router.delete('/:id', User.delete)
 
 export default router

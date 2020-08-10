@@ -65,6 +65,23 @@ class TaskController extends BaseController {
       res.status(400).send()
     }
   }
+
+  public async delete(req: Request, res: Response) {
+    const { id } = req.params
+
+    try {
+      const task = await Task.findByIdAndDelete(id)
+
+      if (!task) {
+        res.status(404).send()
+        return
+      }
+
+      res.json(task)
+    } catch (e) {
+      res.status(500).send()
+    }
+  }
 }
 
 export default new TaskController()
