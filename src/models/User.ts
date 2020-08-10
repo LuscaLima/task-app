@@ -31,16 +31,6 @@ const UserSchema = new Schema({
 
       return true
     }
-  },
-  age: {
-    type: Number,
-    validate(value: number): boolean {
-      if (value < 0) {
-        throw new Error('The Age must be a positive number')
-      }
-
-      return true
-    }
   }
 })
 
