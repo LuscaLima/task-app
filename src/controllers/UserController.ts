@@ -2,11 +2,14 @@ import { Request, Response } from 'express'
 import BaseController from './BaseController'
 import User from '../models/User'
 
-class UserController extends BaseController {
-  // constructor() {
-  //   super()
-  // }
+/** Just set a new value to a property of an user in update method */
+function setProperty<T, U extends keyof T>(obj: T, key: U, body: T): void {
+  if (!!body[key]) {
+    obj[key] = body[key]
+  }
+}
 
+class UserController extends BaseController {
   async create(req: Request, res: Response): Promise<void> {
     const user = new User(req.body)
 
@@ -46,18 +49,24 @@ class UserController extends BaseController {
 
   public async update(req: Request, res: Response) {
     const { id } = req.params
+    const updates = ['name', 'email', 'password']
 
-    if (!super.isValidUpdate(req.body, ['name', 'email', 'password'])) {
+    if (!super.isValidUpdate(req.body, updates)) {
       res.status(400).json({
         error: 'Invalid update'
       })
     }
 
     try {
-      const user = await User.findByIdAndUpdate(id, req.body, {
-        new: true,
-        runValidators: true
-      })
+      const user = await User.findById(id)
+
+      if (user) {
+        updates.forEach(update => {
+          setProperty(user, update, req.body)
+        })
+
+        await user.save()
+      }
 
       if (!user) {
         res.status(404).send()
@@ -66,7 +75,7 @@ class UserController extends BaseController {
 
       res.json(user)
     } catch (e) {
-      res.status(400).send()
+      res.status(400).send(e)
     }
   }
 
