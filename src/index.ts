@@ -20,5 +20,3 @@ app.use('/user', UserRoutes)
 app.listen(port, () => {
   console.log(`Aplicação escutando na porta ${port}`)
 })
-
-// import "./mongodb";
