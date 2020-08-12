@@ -17,4 +17,7 @@ router.put('/:id', User.update)
 /** Delete one user by ID */
 router.delete('/:id', User.delete)
 
+/** Login */
+router.post('/login', User.login)
+
 export default router
