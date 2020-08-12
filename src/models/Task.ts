@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
-const TaskSchema = new Schema({
+const TaskSchema: Schema = new Schema({
   title: {
     type: String,
     required: true,
@@ -17,6 +17,6 @@ const TaskSchema = new Schema({
   }
 })
 
-const Tasks = mongoose.model('Tasks', TaskSchema)
+const Task = mongoose.model('Tasks', TaskSchema)
 
-export default Tasks
+export default Task
