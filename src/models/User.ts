@@ -1,8 +1,9 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
 import bcrypt from 'bcryptjs'
+import { IUserSchema, IUser, IUserModel } from '../interfaces/User'
 
-const UserSchema = new Schema({
+const UserSchema: Schema = new Schema({
   name: {
     type: String,
     required: true,
@@ -11,6 +12,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
     trim: true,
     validate(value: string): boolean {
       if (!isEmail(value)) {
@@ -35,12 +37,32 @@ const UserSchema = new Schema({
   }
 })
 
-/** To make the 'password' field visible outside the Document instance */
-interface IUserDocument extends Document {
+/** Finda a user by the passing email and password */
+UserSchema.statics.findByCredentials = async (
+  email: string,
   password: string
+) => {
+  const user = await User.findOne({ email })
+
+  if (!user) {
+    throw new Error('Unable to login')
+  }
+
+  const isMatch = bcrypt.compareSync(password, user.password)
+
+  if (!isMatch) {
+    throw new Error('Unable to login')
+  }
+
+  return user
 }
 
-UserSchema.pre<IUserDocument>('save', async function (next): Promise<void> {
+/**
+ *  Whenever the 'save' event is triggered,
+ *  the password is handled if it exists
+ *
+ * */
+UserSchema.pre<IUserSchema>('save', async function (next): Promise<void> {
   const user = this // Its better refer this like a user
 
   if (user.isModified('password')) {
@@ -50,6 +72,6 @@ UserSchema.pre<IUserDocument>('save', async function (next): Promise<void> {
   next()
 })
 
-const Users = mongoose.model('Users', UserSchema)
+const User: IUserModel = mongoose.model<IUser, IUserModel>('Users', UserSchema)
 
-export default Users
+export default User
