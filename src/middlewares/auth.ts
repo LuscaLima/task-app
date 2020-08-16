@@ -40,6 +40,7 @@ export async function auth(
     // Prevents this same user from being brought back from
     // the database again in the handler of the route
     req.user = user
+    req.token = token
 
     next()
   } catch (e) {
