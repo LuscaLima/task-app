@@ -1,11 +1,15 @@
 import { Document, Model } from 'mongoose'
 
+interface Token {
+  token: string
+}
+
 /** Interface for user schema */
 export interface IUserSchema extends Document {
   name: string
   email: string
   password: string
-  tokens: Array<object>
+  tokens: Token[]
 }
 
 /** Interface for user base */
