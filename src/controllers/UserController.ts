@@ -15,7 +15,8 @@ class UserController extends BaseController {
 
     try {
       await user.save()
-      res.status(201).json(user)
+      const token = await user.generateAuthToken()
+      res.status(201).json({ user, token })
     } catch (e) {
       res.status(400).send(e)
     }
