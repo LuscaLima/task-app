@@ -101,7 +101,9 @@ class UserController extends BaseController {
 
     try {
       const user = await User.findByCredentials(email, password)
-      res.json(user)
+      const token = await user.generateAuthToken()
+
+      res.json({ user, token })
     } catch (e) {
       res.status(400).send()
     }
