@@ -1,12 +1,7 @@
-import { Request, Response, NextFunction } from 'express'
-import { IUser } from '../interfaces/User'
+import { Response, NextFunction } from 'express'
+import { IRequest } from '../interfaces/Middleware'
 import jwt from 'jsonwebtoken'
 import User from '../models/User'
-
-/** Specific local interface for Request object */
-interface IRequest extends Request {
-  user?: IUser
-}
 
 /** Make the HASH env variable visible as a string */
 declare const process: {
