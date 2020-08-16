@@ -24,4 +24,7 @@ router.post('/login', User.login)
 /** Logout route */
 router.post('/logout', auth, User.logout)
 
+/** Logout in all sessions route */
+router.post('/logoutall', auth, User.logoutAll)
+
 export default router
