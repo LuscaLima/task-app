@@ -1,7 +1,15 @@
 import mongoose, { Schema } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { IUserSchema, IUser, IUserModel } from '../interfaces/User'
+
+// /** Make the HASH env variable visible as a string */
+declare const process: {
+  env: {
+    HASH: string
+  }
+}
 
 const UserSchema: Schema = new Schema({
   name: {
@@ -34,8 +42,27 @@ const UserSchema: Schema = new Schema({
 
       return true
     }
-  }
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 })
+
+/** Generates a auth token JWT based from single user */
+UserSchema.methods.generateAuthToken = async function (): Promise<string> {
+  const user = this // Its better refer this like a user
+  const token = jwt.sign({ _id: user._id }, process.env.HASH)
+
+  user.tokens = [...user.tokens, { token }]
+  await user.save()
+
+  return token
+}
 
 /** Finds a user by email and password*/
 UserSchema.statics.findByCredentials = async (
@@ -58,8 +85,8 @@ UserSchema.statics.findByCredentials = async (
 }
 
 /**
- *  Whenever the 'save' event is triggered,
- *  the password is handled if it exists
+ * Whenever the 'save' event is triggered,
+ * the password is handled if it exists
  * */
 UserSchema.pre<IUserSchema>('save', async function (next): Promise<void> {
   const user = this // Its better refer this like a user
