@@ -59,11 +59,9 @@ class UserController extends BaseController {
     }
   }
 
-  public async delete(req: Request, res: Response) {
-    const { id } = req.params
-
+  public async delete(req: IRequest, res: Response) {
     try {
-      const user = await User.findByIdAndDelete(id)
+      const user = await User.findByIdAndDelete(req.user?._id)
 
       if (!user) {
         res.status(404).send()
