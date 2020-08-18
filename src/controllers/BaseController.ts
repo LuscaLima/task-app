@@ -6,16 +6,6 @@ abstract class BaseController {
    */
   abstract create(req: Request, res: Response): Promise<void>
 
-  /**
-   * all
-   */
-  // abstract all(_: Request, res: Response): Promise<void>
-
-  /**
-   * getById
-   */
-  abstract oneById(req: Request, res: Response): Promise<void>
-
   /** update by id */
   abstract update(req: Request, res: Response): Promise<void>
 

@@ -27,23 +27,6 @@ class UserController extends BaseController {
     res.json(req.user)
   }
 
-  async oneById(req: Request, res: Response) {
-    const { id } = req.params
-
-    try {
-      const user = await User.findById(id)
-
-      if (!user) {
-        res.status(404).send()
-        return
-      }
-
-      res.json(user)
-    } catch (e) {
-      res.status(404).send(e)
-    }
-  }
-
   public async update(req: Request, res: Response) {
     const { id } = req.params
     const updates = ['name', 'email', 'password']

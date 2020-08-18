@@ -9,9 +9,6 @@ router.post('/', User.create)
 /** Get the profile of the current user */
 router.get('/me', auth, User.me)
 
-/** Get one user by ID */
-router.get('/:id', User.oneById)
-
 /** Update one user by ID */
 router.put('/:id', User.update)
 
