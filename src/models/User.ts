@@ -11,7 +11,7 @@ declare const process: {
   }
 }
 
-const UserSchema: Schema = new Schema({
+const userSchema: Schema = new Schema({
   name: {
     type: String,
     required: true,
@@ -53,8 +53,15 @@ const UserSchema: Schema = new Schema({
   ]
 })
 
+/** Get all tasks related an user */
+userSchema.virtual('tasks', {
+  ref: 'Task',
+  localField: '_id',
+  foreignField: 'owner'
+})
+
 /** Generates a auth token JWT based from single user */
-UserSchema.methods.generateAuthToken = async function (): Promise<string> {
+userSchema.methods.generateAuthToken = async function (): Promise<string> {
   const user = this // Its better refer this like a user
   const token = jwt.sign({ _id: user._id }, process.env.HASH)
 
@@ -65,18 +72,19 @@ UserSchema.methods.generateAuthToken = async function (): Promise<string> {
   return token
 }
 
-UserSchema.methods.toJSON = function (): object {
+/** Send just the public data about an user */
+userSchema.methods.toJSON = function (): object {
   const user = this // Its better refer this like a user
   const userObject = user.toObject()
 
-  delete userObject.password
-  delete userObject.tokens
+  delete userObject.password // remove the secrete password
+  delete userObject.tokens // remove the array of tokens
 
   return userObject
 }
 
 /** Finds a user by email and password*/
-UserSchema.statics.findByCredentials = async (
+userSchema.statics.findByCredentials = async (
   email: string,
   password: string
 ) => {
@@ -99,7 +107,7 @@ UserSchema.statics.findByCredentials = async (
  * Whenever the 'save' event is triggered,
  * the password is handled if it exists
  * */
-UserSchema.pre<IUserSchema>('save', async function (next): Promise<void> {
+userSchema.pre<IUserSchema>('save', async function (next): Promise<void> {
   const user = this // Its better refer this like a user
 
   if (user.isModified('password')) {
@@ -109,6 +117,6 @@ UserSchema.pre<IUserSchema>('save', async function (next): Promise<void> {
   next()
 })
 
-const User: IUserModel = mongoose.model<IUser, IUserModel>('Users', UserSchema)
+const User: IUserModel = mongoose.model<IUser, IUserModel>('User', userSchema)
 
 export default User
