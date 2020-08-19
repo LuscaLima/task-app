@@ -14,9 +14,14 @@ const TaskSchema: Schema = new Schema({
     type: Boolean,
     required: false,
     default: false
+  },
+  owner: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   }
 })
 
-const Task = mongoose.model('Tasks', TaskSchema)
+const Task = mongoose.model('Task', TaskSchema)
 
 export default Task
