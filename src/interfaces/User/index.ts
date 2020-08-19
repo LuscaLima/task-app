@@ -10,6 +10,7 @@ export interface IUserSchema extends Document {
   email: string
   password: string
   tokens: Token[]
+  tasks: object[]
 }
 
 /** Interface for user base */
