@@ -3,6 +3,7 @@ import isEmail from 'validator/lib/isEmail'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { IUserSchema, IUser, IUserModel } from '../interfaces/User'
+import Task from './Task'
 
 // /** Make the HASH env variable visible as a string */
 declare const process: {
@@ -113,6 +114,15 @@ userSchema.pre<IUserSchema>('save', async function (next): Promise<void> {
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8)
   }
+
+  next()
+})
+
+/** Remove all user taks when their is removed */
+userSchema.pre('remove', async function (next) {
+  const user = this // Its better refer this like a user
+
+  await Task.deleteMany({ owner: user._id })
 
   next()
 })
