@@ -18,13 +18,26 @@ class TaskController extends BaseController {
 
   public async all(req: IRequest, res: Response): Promise<void> {
     try {
-      /** Filtering and pagination */
-      const { completed, limit, skip } = req.query
+      /** Filtering and pagination and sorting */
+      const { completed, limit, skip, sortby } = req.query
 
       const match: IFlexObject = {}
 
       if (completed) {
         match.completed = completed === 'true'
+      }
+
+      const sort: IFlexObject = {}
+
+      const order: IFlexObject = {
+        asc: 1, // ascendant
+        desc: -1 // descendant
+      }
+
+      if (sortby) {
+        const raw = <string>sortby
+        const [field, ord] = raw.split(':')
+        sort[field] = order[ord]
       }
 
       const user = req.user
@@ -34,7 +47,8 @@ class TaskController extends BaseController {
           match,
           options: {
             limit: Math.abs(parseInt(<string>limit)),
-            skip: Math.abs(parseInt(<string>skip))
+            skip: Math.abs(parseInt(<string>skip)),
+            sort
           }
         })
         .execPopulate()
