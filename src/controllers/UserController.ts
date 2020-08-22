@@ -23,6 +23,10 @@ class UserController extends BaseController {
     }
   }
 
+  async avatar(_: Request, res: Response) {
+    res.send()
+  }
+
   async me(req: IRequest, res: Response) {
     res.json(req.user)
   }
