@@ -88,6 +88,7 @@ userSchema.methods.toJSON = function (): object {
 
   delete userObject.password // remove the secrete password
   delete userObject.tokens // remove the array of tokens
+  delete userObject.avatar // remove the avatar
 
   return userObject
 }
