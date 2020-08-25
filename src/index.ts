@@ -1,7 +1,7 @@
 import express from 'express'
 import './database'
 import { errorHandler } from './middlewares/general'
-import UserRoutes, from './routes/UserRoutes'
+import UserRoutes from './routes/UserRoutes'
 import TaskRoutes from './routes/TaskRoutes'
 
 /** Instantiate the express and define the port to listen */
