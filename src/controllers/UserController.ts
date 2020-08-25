@@ -35,6 +35,18 @@ class UserController extends BaseController {
     res.send()
   }
 
+  async avatarRemove(req: IRequest, res: Response) {
+    const user = req.user
+
+    if (user) {
+      user.avatar = undefined
+    }
+
+    await user?.save()
+
+    res.send()
+  }
+
   async me(req: IRequest, res: Response) {
     res.json(req.user)
   }

@@ -10,6 +10,9 @@ router.post('/', User.create)
 /** Set up an avatar */
 router.post('/me/avatar', auth, uploadAvatar, User.avatar)
 
+/** Removing the user's avatar */
+router.delete('/me/avatar', auth, User.avatarRemove)
+
 /** Get the profile of the current user */
 router.get('/me', auth, User.me)
 
