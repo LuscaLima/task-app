@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { IRequest } from '../interfaces/Middleware'
+import sharp from 'sharp'
 import BaseController from './BaseController'
 import User from '../models/User'
 
@@ -26,8 +27,16 @@ class UserController extends BaseController {
   async setAvatar(req: IRequest, res: Response) {
     const user = req.user
 
+    const buffer = await sharp(req.file.buffer)
+      .resize({
+        width: 400,
+        height: 400
+      })
+      .png()
+      .toBuffer()
+
     if (user) {
-      user.avatar = req.file.buffer
+      user.avatar = buffer
     }
 
     await user?.save()
@@ -57,7 +66,7 @@ class UserController extends BaseController {
         throw new Error()
       }
 
-      res.set('Content-Type', 'image/jpg')
+      res.set('Content-Type', 'image/png')
       res.send(user.avatar)
     } catch (e) {
       res.status(404).send()
